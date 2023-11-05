@@ -1,0 +1,131 @@
+The Answers of the following queries are:-
+
+Q.1 Customers who never ordered
+Solution :- 
+
+SELECT name 
+FROM users 
+WHERE user_id NOT IN 
+ (
+   SELECT user_id FROM orders
+ );
+
+Q.2 Find the Average Price of a dish
+Solution:- 
+
+
+SELECT f.f_name, AVG(price) AS 'Avg Price' 
+FROM menu m 
+Join food f 
+ON m.f_id = f.f_id 
+Group By m.f_id;
+
+Q.3 Find top restaurants in terms of no. of orders
+Solution:-
+
+For May Month:- 
+
+Select r.r_name, COUNT(*) AS 'month' 
+FROM orders o 
+JOIN restaurants r 
+ON o.r_id = r.r_id 
+WHERE MONTHNAME(date) LIKE 'May' 
+GROUP BY o.r_id 
+ORDER BY COUNT(*) DESC LIMIT 1;
+
+For June Month:- 
+
+Select r.r_name, COUNT(*) AS 'month' 
+FROM orders o 
+JOIN restaurants r 
+ON o.r_id = r.r_id 
+WHERE MONTHNAME(date) LIKE 'June' 
+GROUP BY o.r_id 
+ORDER BY COUNT(*) DESC LIMIT 1;
+
+For July Month:- 
+
+Select r.r_name, COUNT(*) AS 'month' 
+FROM orders o 
+JOIN restaurants r 
+ON o.r_id = r.r_id 
+WHERE MONTHNAME(date) LIKE 'July' 
+GROUP BY o.r_id 
+ORDER BY COUNT(*) DESC LIMIT 1;
+
+Q.4 Restaurants with monthly sales greater than 500
+Solution:-
+
+For May Month:- 
+
+SELECT r.r_name, SUM(amount) AS 'revenue'
+FROM orders o
+JOIN restaurants r 
+ON o.r_id = r.r_id
+WHERE MONTHNAME(date) LIKE 'May'
+GROUP BY o.r_id
+HAVING revenue>500
+
+For June Month:- 
+
+SELECT r.r_name, SUM(amount) AS 'revenue'
+FROM orders o
+JOIN restaurants r 
+ON o.r_id = r.r_id
+WHERE MONTHNAME(date) LIKE 'June'
+GROUP BY o.r_id
+HAVING revenue>500
+
+For July Month:- 
+
+SELECT r.r_name, SUM(amount) AS 'revenue'
+FROM orders o
+JOIN restaurants r 
+ON o.r_id = r.r_id
+WHERE MONTHNAME(date) LIKE 'July'
+GROUP BY o.r_id
+HAVING revenue>500
+
+
+Q.5 Show all order details for particular customer in a particular date range
+Solution:-
+
+SELECT o.order_id, r.r_name, f.f_name 
+FROM orders o 
+JOIN restaurants r 
+ON r.r_id=o.r_id 
+JOIN order_details od 
+ON od.order_id=o.order_id 
+JOIN food f 
+ON f.f_id=od.f_id 
+WHERE user_id = 
+  (
+      SELECT user_id FROM users WHERE name LIKE       'Nitesh'
+  ) 
+  AND 
+  (
+      date > '2022-06-10' AND date < '2022-07-       10'
+  );  
+
+
+Q.6 Restaurants with maximum loyal customers
+Solution:-
+
+SELECT r.r_name, COUNT(*) AS 'loyal_customers'
+FROM (
+    SELECT r_id,user_id,COUNT(*) AS 'visits'
+    FROM orders
+    GROUP BY r_id,user_id
+    HAVING visits>1
+) t 
+JOIN restaurants r
+ON r.r_id=t.r_id
+GROUP BY t.r_id
+ORDER BY loyal_customers DESC LIMIT 1;
+
+
+
+
+
+
+
